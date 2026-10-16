@@ -1,3 +1,5 @@
+using BusinessLayer.Interfaces;
+using BusinessLayer.Services;
 using DataLayer;
 using DataLayer.DbContext;
 using DataLayer.Interfaces;
@@ -8,6 +10,13 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+// Register services for dependency injection
+builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IBookService, BookService>();
+builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<ICommentService, CommentService>();
+builder.Services.AddScoped<IBookGenreService, BookGenreService>();
 
 // Register repositories for dependency injection
 builder.Services.AddScoped<IUserRepository, UserRepository>();
