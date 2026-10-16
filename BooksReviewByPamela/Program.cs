@@ -1,3 +1,5 @@
+using AutoMapper;
+using BooksReviewByPamela.Mapping;
 using BusinessLayer.Interfaces;
 using BusinessLayer.Services;
 using DataLayer;
@@ -24,6 +26,10 @@ builder.Services.AddScoped<IBookRepository, BookRepository>();
 builder.Services.AddScoped<IGenreRepository, GenreRepository>();
 builder.Services.AddScoped<ICommentRepository, CommentRepository>();
 builder.Services.AddScoped<IBookGenreRepository, BookGenreRepository>();
+
+// Register AutoMapper
+builder.Services.AddAutoMapper(typeof(MappingProfile));
+
 
 
 builder.Services.AddControllers();
