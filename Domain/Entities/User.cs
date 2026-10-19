@@ -1,21 +1,27 @@
-﻿using System;
+﻿using Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using System.Xml.Linq;
-using Domain.Entities;
 
 namespace Domain.Entities
 {
     public class User
     {
         public int Id { get; set; }
-        public string UserName { get; set; } = string.Empty;
-        public string Email { get; set; } = string.Empty;
+        public string UserName { get; set; }
+        public string Email { get; set; }
+        public string Password { get; set; } 
 
-        // Navigation
-        public List<Book> Books { get; set; } = new();
-        public List<Comment> Comments { get; set; } = new();
+        public bool IsAdmin { get; set; } = false;
+
+        [JsonIgnore]
+        public List<Book> Books { get; set; }
+
+        [JsonIgnore]
+        public List<Comment> Comments { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
+using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {
@@ -18,7 +19,9 @@ namespace Domain.Entities
         public int UserId { get; set; }
 
         // Navigation
+        [JsonIgnore]
         public Book Book { get; set; }
+        [JsonIgnore]
         public User User { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Domain.Entities;
+using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {
@@ -13,6 +14,7 @@ namespace Domain.Entities
         public int GenreId { get; set; }
 
         // Navigation
+        [JsonIgnore]
         public Book Book { get; set; }
         public Genre Genre { get; set; }
     }

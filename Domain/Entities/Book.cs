@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
 using Domain.Entities;
+using System.Text.Json.Serialization;
 
 namespace Domain.Entities
 {
@@ -22,6 +23,7 @@ namespace Domain.Entities
         // Navigation
         public User User { get; set; }
         public List<BookGenre> BookGenres { get; set; } = new();
+        [JsonIgnore]
         public List<Comment> Comments { get; set; } = new();
     }
 }

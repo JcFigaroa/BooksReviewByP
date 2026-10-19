@@ -12,6 +12,8 @@ namespace BooksReviewByPamela.Mapping
             CreateMap<BookDto, Book>();
             CreateMap<GenreDto, Genre>();
             CreateMap<CommentDto, Comment>();
+            CreateMap<UserCreateDto, User>();
+
         }
     }
 }

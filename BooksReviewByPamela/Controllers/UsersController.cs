@@ -31,7 +31,7 @@ public class UsersController : ControllerBase
     }
 
     [HttpPost]
-    public async Task<IActionResult> Create(UserDto dto)
+    public async Task<IActionResult> Create(UserCreateDto dto)
     {
         var user = _mapper.Map<User>(dto);
 

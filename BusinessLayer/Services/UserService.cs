@@ -1,6 +1,7 @@
 ﻿using DataLayer.Interfaces;
 using Domain.Entities;
 using BusinessLayer.Interfaces;
+using BCrypt.Net;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,8 @@ namespace BusinessLayer.Services
 
         public async Task<User> CreateAsync(User user)
         {
+            user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
             await _repo.AddAsync(user);
             return user;
         }
@@ -35,6 +38,7 @@ namespace BusinessLayer.Services
 
             existing.UserName = user.UserName;
             existing.Email = user.Email;
+            existing.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
 
             await _repo.UpdateAsync(existing);
             return existing;
