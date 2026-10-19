@@ -47,6 +47,7 @@ builder.Services.AddScoped<IBookService, BookService>();
 builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddScoped<ICommentService, CommentService>();
 builder.Services.AddScoped<IBookGenreService, BookGenreService>();
+builder.Services.AddScoped<ILoginService, LoginService>();
 
 // Register repositories for dependency injection
 builder.Services.AddScoped<IUserRepository, UserRepository>();
