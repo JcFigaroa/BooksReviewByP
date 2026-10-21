@@ -12,6 +12,7 @@ export default function App() {
 
       <Routes>
         <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Books />} />
         <Route path="/books" element={<Books />} />
         <Route path="/contact" element={<div>Contact Page</div>} />
         <Route

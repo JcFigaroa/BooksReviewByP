@@ -30,27 +30,27 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
-      <div className="bg-white shadow-xl rounded-xl p-8 w-full max-w-md">
-        <h2 className="text-3xl font-bold text-center mb-6 text-gray-800">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-frost-100 via-frost-50 to-ember-50/60 px-4">
+      <div className="card w-full max-w-md p-8">
+        <h2 className="text-3xl text-center mb-6 text-ink-900">
           Welcome Back
         </h2>
 
         {error && (
-          <p className="text-red-500 text-center mb-4 font-medium">
+          <p className="text-berry-600 text-center mb-4 font-medium">
             {error}
           </p>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="label">
               Email
             </label>
             <input
               type="email"
               placeholder="you@example.com"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="input"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
@@ -58,13 +58,13 @@ export default function Login() {
           </div>
 
           <div>
-            <label className="block text-gray-700 font-medium mb-1">
+            <label className="label">
               Password
             </label>
             <input
               type="password"
               placeholder="••••••••"
-              className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+              className="input"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
@@ -73,7 +73,7 @@ export default function Login() {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition"
+            className="btn-primary w-full py-3"
           >
             Login
           </button>
