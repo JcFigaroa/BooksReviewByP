@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import BookFormModal from "./BookFormModal";
 import ConfirmDialog from "./ConfirmDialog";
+import BookCover from "../BookCover";
 
 export default function BooksPanel({ books, labels, onCreate, onUpdate, onDelete }) {
   const [query, setQuery] = useState("");
@@ -62,12 +63,7 @@ export default function BooksPanel({ books, labels, onCreate, onUpdate, onDelete
           {visibleBooks.map((book) => (
             <li key={book.id} className="card flex animate-fade-up flex-col p-5">
               <div className="flex items-start gap-4">
-                <div
-                  aria-hidden
-                  className="flex h-16 w-12 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-pine-500 to-pine-700 font-serif text-xl text-frost-50 shadow-inner"
-                >
-                  {book.title.charAt(0).toUpperCase()}
-                </div>
+                <BookCover book={book} className="h-20 w-14 shrink-0 rounded-lg text-xl shadow-cozy" />
                 <div className="min-w-0">
                   <h3 className="truncate text-lg text-ink-900">{book.title}</h3>
                   <p className="text-sm text-ink-500">by {book.author}</p>

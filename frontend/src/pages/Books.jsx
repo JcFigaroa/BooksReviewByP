@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import api from "../api/axios";
+import BookCover from "../components/BookCover";
 
 export default function Books() {
   const [books, setBooks] = useState([]);
@@ -25,7 +26,7 @@ export default function Books() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-xl text-gray-600">Loading books...</p>
+        <p className="text-xl text-ink-500">Loading books...</p>
       </div>
     );
   }
@@ -33,49 +34,54 @@ export default function Books() {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-xl text-red-600">{error}</p>
+        <p className="text-xl text-berry-600">{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 p-6">
-      <h1 className="text-3xl font-bold mb-6 text-gray-800">Books</h1>
+    <div className="min-h-screen bg-gradient-to-b from-frost-100 via-frost-50 to-ember-50/60 p-6">
+      <div className="mx-auto max-w-6xl">
+        <h1 className="text-3xl mb-6 text-ink-900">Books</h1>
 
-      {books.length === 0 ? (
-        <p className="text-gray-600">No books found.</p>
-      ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {books.map((book) => (
-            <div
-              key={book.id}
-              className="bg-white shadow-md rounded-lg p-4 hover:shadow-lg transition"
-            >
-              <h2 className="text-xl font-semibold text-gray-800">
-                {book.title}
-              </h2>
+        {books.length === 0 ? (
+          <p className="text-ink-500">No books found.</p>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+            {books.map((book) => (
+              <div key={book.id} className="card flex flex-col overflow-hidden transition hover:-translate-y-0.5">
+                <BookCover book={book} className="aspect-[2/3] w-full text-6xl" />
 
-              <p className="text-gray-600 mt-1">{book.author}</p>
+                <div className="flex flex-1 flex-col p-4">
+                  <h2 className="text-xl text-ink-900">{book.title}</h2>
 
-              <p className="text-sm text-gray-500 mt-4 line-clamp-3">
-                {book.description}
-              </p>
-              <p className="text-sm text-gray-500 mt-2">
-                Genre: {book.bookGenres?.map(bg => bg.genre.name).join(", ") || "None"}
-                </p>
+                  <p className="text-ink-500 mt-1">{book.author}</p>
 
+                  <p className="text-sm text-ink-700 mt-3 line-clamp-3">{book.description}</p>
 
-              <p className="text-xs text-gray-400 mt-2">
-                Added on {new Date(book.createdAt).toLocaleDateString()}
-              </p>
+                  {book.bookGenres?.length > 0 && (
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      {book.bookGenres.map((bg) => (
+                        <span key={bg.genreId} className="chip border-ember-100 bg-ember-50 text-ember-700">
+                          {bg.genre?.name}
+                        </span>
+                      ))}
+                    </div>
+                  )}
 
-              <button className="mt-4 w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition">
-                View Details
-              </button>
-            </div>
-          ))}
-        </div>
-      )}
+                  <p className="text-xs text-ink-400 mt-3">
+                    Added on {new Date(book.createdAt).toLocaleDateString()}
+                  </p>
+
+                  <div className="mt-auto pt-4">
+                    <button className="btn-primary w-full">View Details</button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

@@ -17,3 +17,13 @@ function toBookDto(book) {
     genreIds: book.genreIds,
   };
 }
+
+// BooksController.UploadImage: multipart form with a single "file" field, returns { imagePath }
+export const uploadBookCover = (id, file) => {
+  const data = new FormData();
+  data.append("file", file);
+  return api.post(`/books/${id}/image`, data).then((res) => res.data);
+};
+
+// imagePath is served by the API's static files (e.g. "/images/books/abc.jpg"), not under /api
+export const coverUrl = (imagePath) => (imagePath ? new URL(imagePath, api.defaults.baseURL).href : null);
