@@ -1,238 +1,161 @@
-import { useEffect, useState } from "react";
-import api from "../api/axios";
+import { useCallback, useEffect, useState } from "react";
+import { getBooks, createBook, updateBook, deleteBook } from "../api/books";
+import { getGenres, createGenre, updateGenre, deleteGenre } from "../api/genres";
+import { errorMessage } from "../api/errors";
+import BooksPanel from "../components/admin/BooksPanel";
+import LabelsPanel from "../components/admin/LabelsPanel";
+import Toasts from "../components/admin/Toasts";
+import Snowfall from "../components/admin/Snowfall";
+
+const tabs = [
+  { id: "books", label: "Books", icon: "📖" },
+  { id: "labels", label: "Labels", icon: "🏷️" },
+];
 
 export default function AdminDashboard() {
   const [books, setBooks] = useState([]);
+  const [labels, setLabels] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-  const [genres, setGenres] = useState([]);
+  const [loadError, setLoadError] = useState("");
+  const [tab, setTab] = useState("books");
+  const [toasts, setToasts] = useState([]);
 
-
-  const [form, setForm] = useState({
-    id: null,
-    title: "",
-    author: "",
-    description: "",
-    genreIds: []
-  });
-
-  const [isEditing, setIsEditing] = useState(false);
-
-  useEffect(() => {
-    loadBooks();
+  const notify = useCallback((tone, message) => {
+    const id = crypto.randomUUID();
+    setToasts((prev) => [...prev, { id, tone, message }]);
+    setTimeout(() => setToasts((prev) => prev.filter((t) => t.id !== id)), 4500);
   }, []);
 
-  async function loadBooks() {
+  const loadAll = useCallback(async () => {
     try {
-      const response = await api.get("/books");
-      setBooks(response.data);
-    } catch {
-      setError("Failed to load books");
+      const [bookData, labelData] = await Promise.all([getBooks(), getGenres()]);
+      setBooks(bookData);
+      setLabels(labelData);
+      setLoadError("");
+    } catch (err) {
+      setLoadError(errorMessage(err, "Couldn't load the library"));
+      return;
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
 
   useEffect(() => {
-  loadBooks();
-  loadGenres();
-}, []);
+    loadAll();
+  }, [loadAll]);
 
-    async function loadGenres() {
+  // Runs a mutation, refreshes data, and reports the outcome. Returns true on success.
+  async function run(action, successMessage, failureMessage) {
     try {
-        const response = await api.get("/genres");
-        setGenres(response.data);
-    } catch {
-        alert("Failed to load genres");
-    }
-    }
-
-
-  function handleChange(e) {
-    setForm({ ...form, [e.target.name]: e.target.value });
-  }
-
-  async function handleCreate(e) {
-    e.preventDefault();
-
-    try {
-      await api.post("/books", {
-        title: form.title,
-        author: form.author,
-        description: form.description,
-        genreIds: form.genreIds
-      });
-
-      resetForm();
-      loadBooks();
-    } catch {
-      alert("Failed to create book");
+      await action();
+      await loadAll();
+      notify("success", successMessage);
+      return true;
+    } catch (err) {
+      notify("error", errorMessage(err, failureMessage));
+      return false;
     }
   }
 
-  function startEdit(book) {
-    setIsEditing(true);
-    setForm({
-      id: book.id,
-      title: book.title,
-      author: book.author,
-      description: book.description,
-      genreIds: book.bookGenres.map(bg => bg.genreId)
-    });
-  }
+  const bookHandlers = {
+    onCreate: (form) => run(() => createBook(form), `“${form.title}” is on the shelf.`, "Couldn't add the book"),
+    onUpdate: (id, form) => run(() => updateBook(id, form), "Book updated.", "Couldn't update the book"),
+    onDelete: (id) => run(() => deleteBook(id), "Book deleted.", "Couldn't delete the book"),
+  };
 
-  async function handleUpdate(e) {
-    e.preventDefault();
+  const labelHandlers = {
+    onCreate: (name) => run(() => createGenre(name), `Label “${name.trim()}” added.`, "Couldn't add the label"),
+    onUpdate: (id, name) => run(() => updateGenre(id, name), "Label renamed.", "Couldn't rename the label"),
+    onDelete: (id) => run(() => deleteGenre(id), "Label deleted.", "Couldn't delete the label"),
+  };
 
-    try {
-      await api.put(`/books/${form.id}`, {
-        title: form.title,
-        author: form.author,
-        description: form.description,
-        genreIds: form.genreIds
-      });
-
-      resetForm();
-      loadBooks();
-    } catch {
-      alert("Failed to update book");
-    }
-  }
-
-  async function handleDelete(id) {
-    if (!confirm("Delete this book?")) return;
-
-    try {
-      await api.delete(`/books/${id}`);
-      loadBooks();
-    } catch {
-      alert("Failed to delete book");
-    }
-  }
-
-  function toggleGenre(id) {
-  setForm((prev) => {
-    const exists = prev.genreIds.includes(id);
-    return {
-      ...prev,
-      genreIds: exists
-        ? prev.genreIds.filter((x) => x !== id)
-        : [...prev.genreIds, id]
-    };
-  });
-}
-
-
-  function resetForm() {
-    setIsEditing(false);
-    setForm({
-      id: null,
-      title: "",
-      author: "",
-      description: "",
-      genreIds: []
-    });
-  }
-
-  if (loading) return <p className="p-6">Loading...</p>;
-  if (error) return <p className="p-6 text-red-600">{error}</p>;
+  const unlabeled = books.filter((b) => !b.bookGenres?.length).length;
+  const newest = [...books].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
 
   return (
-    <div className="p-6">
-      <h1 className="text-3xl font-bold mb-6">Admin Dashboard</h1>
+    <div className="relative min-h-[calc(100vh-4rem)]">
+      <Snowfall />
 
-      {/* FORM */}
-      <div className="bg-white shadow-md p-6 rounded-lg mb-10 max-w-xl">
-        <h2 className="text-xl font-semibold mb-4">
-          {isEditing ? "Edit Book" : "Add New Book"}
-        </h2>
+      <main className="relative mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
+        <header className="mb-8">
+          <p className="text-sm font-semibold uppercase tracking-widest text-pine-600">Admin</p>
+          <h1 className="mt-1 text-3xl text-ink-900 sm:text-4xl">The reading room</h1>
+          <p className="mt-2 max-w-xl text-ink-500">
+            Tend to the collection: shelve new books, tidy up details, and keep labels in order.
+          </p>
+        </header>
 
-        <form onSubmit={isEditing ? handleUpdate : handleCreate} className="space-y-4">
-          <input
-            name="title"
-            placeholder="Title"
-            value={form.title}
-            onChange={handleChange}
-            className="w-full p-3 border rounded"
-            required
-          />
-
-          <input
-            name="author"
-            placeholder="Author"
-            value={form.author}
-            onChange={handleChange}
-            className="w-full p-3 border rounded"
-            required
-          />
-
-          <textarea
-            name="description"
-            placeholder="Description"
-            value={form.description}
-            onChange={handleChange}
-            className="w-full p-3 border rounded"
-            required
-          />
-
-         <div>
-            <label className="block mb-2 font-medium">Genres</label>
-
-            <div className="grid grid-cols-2 gap-2">
-                {genres.map((g) => (
-                <label key={g.id} className="flex items-center space-x-2">
-                    <input
-                    type="checkbox"
-                    checked={form.genreIds.includes(g.id)}
-                    onChange={() => toggleGenre(g.id)}
-                    />
-                    <span>{g.name}</span>
-                </label>
-                ))}
-            </div>
-         </div>
-        
-
-
-
-
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-          >
-            {isEditing ? "Update Book" : "Create Book"}
-          </button>
-        </form>
-      </div>
-
-      {/* BOOK LIST */}
-      <h2 className="text-2xl font-semibold mb-4">Books</h2>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {books.map((book) => (
-          <div key={book.id} className="bg-white shadow-md p-4 rounded-lg">
-            <h3 className="text-xl font-bold">{book.title}</h3>
-            <p className="text-gray-600">{book.author}</p>
-            <p className="text-sm text-gray-500 mt-2">{book.description}</p>
-
-            <div className="flex space-x-4 mt-4">
-              <button
-                onClick={() => startEdit(book)}
-                className="px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-              >
-                Edit
-              </button>
-
-              <button
-                onClick={() => handleDelete(book.id)}
-                className="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-              >
-                Delete
-              </button>
-            </div>
+        {loading ? (
+          <LoadingState />
+        ) : loadError ? (
+          <div className="card flex flex-col items-center px-6 py-14 text-center">
+            <span aria-hidden className="text-4xl">🌨️</span>
+            <h2 className="mt-3 text-xl text-ink-900">Snowed in</h2>
+            <p className="mt-1 text-sm text-ink-500">{loadError}</p>
+            <button
+              className="btn-primary mt-5"
+              onClick={() => {
+                setLoading(true);
+                setLoadError("");
+                loadAll();
+              }}
+            >
+              Try again
+            </button>
           </div>
-        ))}
-      </div>
+        ) : (
+          <>
+            <dl className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
+              <Stat label="Books" value={books.length} />
+              <Stat label="Labels" value={labels.length} />
+              <Stat label="Unlabeled books" value={unlabeled} />
+              <Stat label="Newest arrival" value={newest?.title ?? "—"} small />
+            </dl>
+
+            <div role="tablist" className="mb-5 inline-flex rounded-2xl border border-frost-200 bg-white/70 p-1 shadow-cozy">
+              {tabs.map((t) => (
+                <button
+                  key={t.id}
+                  role="tab"
+                  aria-selected={tab === t.id}
+                  onClick={() => setTab(t.id)}
+                  className={`btn px-5 py-2 ${tab === t.id ? "bg-pine-600 text-white" : "text-ink-700 hover:bg-frost-100"}`}
+                >
+                  <span aria-hidden>{t.icon}</span>
+                  {t.label}
+                </button>
+              ))}
+            </div>
+
+            {tab === "books" ? (
+              <BooksPanel books={books} labels={labels} {...bookHandlers} />
+            ) : (
+              <LabelsPanel labels={labels} books={books} {...labelHandlers} />
+            )}
+          </>
+        )}
+      </main>
+
+      <Toasts toasts={toasts} onDismiss={(id) => setToasts((prev) => prev.filter((t) => t.id !== id))} />
+    </div>
+  );
+}
+
+function Stat({ label, value, small }) {
+  return (
+    <div className="card px-5 py-4">
+      <dt className="text-xs font-semibold uppercase tracking-wider text-ink-400">{label}</dt>
+      <dd className={`mt-1 truncate font-serif text-ink-900 ${small ? "text-lg" : "text-3xl"}`}>{value}</dd>
+    </div>
+  );
+}
+
+function LoadingState() {
+  return (
+    <div className="grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3" aria-label="Loading">
+      {Array.from({ length: 6 }, (_, i) => (
+        <div key={i} className="card h-48 animate-pulse bg-frost-100/70" />
+      ))}
     </div>
   );
 }
