@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { getBooks, createBook, updateBook, deleteBook } from "../api/books";
+import { getBooks, createBook, updateBook, deleteBook, uploadBookCover } from "../api/books";
 import { getGenres, createGenre, updateGenre, deleteGenre } from "../api/genres";
 import { errorMessage } from "../api/errors";
 import BooksPanel from "../components/admin/BooksPanel";
@@ -57,9 +57,37 @@ export default function AdminDashboard() {
     }
   }
 
+  // Saves the book, then uploads the cover if one was picked. A failed cover upload
+  // still keeps the saved book, so the modal closes and the error says what happened.
+  async function saveBook(save, form, successMessage, failureMessage) {
+    let bookId;
+    try {
+      bookId = (await save()).id;
+    } catch (err) {
+      notify("error", errorMessage(err, failureMessage));
+      return false;
+    }
+
+    let coverFailed = false;
+    if (form.coverFile) {
+      try {
+        await uploadBookCover(bookId, form.coverFile);
+      } catch (err) {
+        coverFailed = true;
+        notify("error", errorMessage(err, "The book was saved, but the cover couldn't be uploaded"));
+      }
+    }
+
+    await loadAll();
+    if (!coverFailed) notify("success", successMessage);
+    return true;
+  }
+
   const bookHandlers = {
-    onCreate: (form) => run(() => createBook(form), `“${form.title}” is on the shelf.`, "Couldn't add the book"),
-    onUpdate: (id, form) => run(() => updateBook(id, form), "Book updated.", "Couldn't update the book"),
+    onCreate: (form) =>
+      saveBook(() => createBook(form), form, `“${form.title}” is on the shelf.`, "Couldn't add the book"),
+    onUpdate: (id, form) =>
+      saveBook(() => updateBook(id, form).then(() => ({ id })), form, "Book updated.", "Couldn't update the book"),
     onDelete: (id) => run(() => deleteBook(id), "Book deleted.", "Couldn't delete the book"),
   };
 
