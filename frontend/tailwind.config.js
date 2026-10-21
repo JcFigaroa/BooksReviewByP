@@ -7,39 +7,41 @@ export default {
   theme: {
     extend: {
       colors: {
-        // Winter cozy palette: frosted window, deep night ink, pine, and candlelight
+        // Cozy reading-nook palette built from three core colors:
+        // cream paper #FEFAF3 (frost), burgundy #790D16 (berry), forest green #124D1C (pine)
         frost: {
-          50: "#f7f9fc",
-          100: "#edf2f7",
-          200: "#dbe4ee",
-          300: "#c2d0de",
-          400: "#9fb2c6",
+          50: "#fefaf3",
+          100: "#f9f1e3",
+          200: "#efe3cf",
+          300: "#e0cfb4",
+          400: "#c4ae8e",
         },
         ink: {
-          400: "#7b8a9c",
-          500: "#5f6f82",
-          700: "#3a4859",
-          900: "#1f2a37",
+          400: "#8d817a",
+          500: "#6d615b",
+          700: "#463b37",
+          900: "#2a201e",
         },
         pine: {
-          50: "#eef5f1",
-          100: "#dcebe3",
-          500: "#4f7d6c",
-          600: "#3f6b5c",
-          700: "#2f5447",
+          50: "#edf4ee",
+          100: "#d4e5d7",
+          500: "#2c6a37",
+          600: "#124d1c",
+          700: "#0c3913",
         },
+        // Warm accent: soft burgundy tints for chips and highlights
         ember: {
-          50: "#fbf3ec",
-          100: "#f5e4d4",
-          400: "#d49a6a",
-          500: "#c4834f",
-          700: "#8a5a35",
+          50: "#fbf0ec",
+          100: "#f3dcd6",
+          400: "#c27a7c",
+          500: "#a2454b",
+          700: "#790d16",
         },
         berry: {
-          50: "#f9eceb",
-          100: "#f1d5d3",
-          600: "#a3504c",
-          700: "#86403d",
+          50: "#fbeeee",
+          100: "#f2d4d6",
+          600: "#790d16",
+          700: "#5c0910",
         },
       },
       fontFamily: {
@@ -47,7 +49,7 @@ export default {
         sans: ['"Nunito"', "system-ui", "sans-serif"],
       },
       boxShadow: {
-        cozy: "0 1px 2px rgba(31, 42, 55, 0.04), 0 8px 24px -12px rgba(31, 42, 55, 0.18)",
+        cozy: "0 1px 2px rgba(42, 32, 30, 0.04), 0 8px 24px -12px rgba(42, 32, 30, 0.16)",
       },
       keyframes: {
         "fade-up": {
