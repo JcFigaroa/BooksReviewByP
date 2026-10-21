@@ -39,6 +39,18 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+// Configure CORS to allow requests from the frontend
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", policy =>
+    {
+        policy.WithOrigins("http://localhost:5173")
+              .AllowAnyHeader()
+              .AllowAnyMethod();
+    });
+});
+
+
 // Add services to the container.
 
 // Register services for dependency injection
@@ -78,6 +90,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+// Enable CORS for the frontend
+app.UseCors("AllowFrontend");
 
 app.UseHttpsRedirection();
 

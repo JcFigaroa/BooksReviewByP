@@ -35,6 +35,7 @@ public class BooksController : ControllerBase
     public async Task<IActionResult> Create(BookDto dto)
     {
         var book = _mapper.Map<Book>(dto);
+        book.UserId = 1;
 
 
         await _service.CreateAsync(book, dto.GenreIds);
@@ -45,6 +46,7 @@ public class BooksController : ControllerBase
     public async Task<IActionResult> Update(int id, BookDto dto)
     {
         var book = _mapper.Map<Book>(dto);
+        book.UserId = 1;
 
 
         var updated = await _service.UpdateAsync(book, dto.GenreIds);

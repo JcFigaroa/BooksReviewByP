@@ -36,6 +36,8 @@ namespace DataLayer.Repositories
         {
             _context.Books.Add(book);
             await _context.SaveChangesAsync();
+            Console.WriteLine("BOOK ID AFTER SAVE: " + book.Id);
+
         }
 
         public async Task UpdateAsync(Book book)

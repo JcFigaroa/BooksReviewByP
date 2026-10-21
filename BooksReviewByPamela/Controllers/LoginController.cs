@@ -17,7 +17,7 @@ namespace BooksReviewByPamela.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginDto dto)
+        public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
             var token = await _loginService.LoginAsync(dto);
 

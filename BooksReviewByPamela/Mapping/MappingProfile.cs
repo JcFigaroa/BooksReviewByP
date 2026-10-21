@@ -9,7 +9,8 @@ namespace BooksReviewByPamela.Mapping
         public MappingProfile()
         {
             CreateMap<UserDto, User>();
-            CreateMap<BookDto, Book>();
+            CreateMap<BookDto, Book>()
+                .ForMember(b => b.BookGenres, opt => opt.Ignore());
             CreateMap<GenreDto, Genre>();
             CreateMap<CommentDto, Comment>();
             CreateMap<UserCreateDto, User>();
