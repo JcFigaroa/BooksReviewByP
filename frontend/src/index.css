@@ -1,3 +1,78 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-frost-50 font-sans text-ink-900 antialiased;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-serif;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-2xl border border-frost-200 bg-white/80 shadow-cozy backdrop-blur;
+  }
+
+  .input {
+    @apply w-full rounded-xl border border-frost-300 bg-white px-4 py-2.5 text-ink-900 placeholder:text-ink-400
+      transition focus:border-pine-500 focus:outline-none focus:ring-4 focus:ring-pine-100;
+  }
+
+  .label {
+    @apply mb-1.5 block text-sm font-semibold text-ink-700;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition
+      focus:outline-none focus-visible:ring-4 disabled:cursor-not-allowed disabled:opacity-60;
+  }
+
+  .btn-primary {
+    @apply btn bg-pine-600 text-white hover:bg-pine-700 focus-visible:ring-pine-100;
+  }
+
+  .btn-ghost {
+    @apply btn text-ink-700 hover:bg-frost-100 focus-visible:ring-frost-200;
+  }
+
+  .btn-danger {
+    @apply btn bg-berry-600 text-white hover:bg-berry-700 focus-visible:ring-berry-100;
+  }
+
+  .chip {
+    @apply inline-flex items-center gap-1 rounded-full border px-3 py-1 text-xs font-semibold;
+  }
+}
+
+@keyframes snow {
+  0% {
+    transform: translateY(-10vh) translateX(0);
+  }
+  100% {
+    transform: translateY(110vh) translateX(24px);
+  }
+}
+
+/* Gentle snowfall drifting behind the admin dashboard */
+.snowflake {
+  position: absolute;
+  top: 0;
+  border-radius: 9999px;
+  background: white;
+  opacity: 0.7;
+  animation-name: snow;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .snowflake {
+    display: none;
+  }
+}
