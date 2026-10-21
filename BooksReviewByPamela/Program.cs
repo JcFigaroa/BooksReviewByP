@@ -94,6 +94,8 @@ if (app.Environment.IsDevelopment())
 // Enable CORS for the frontend
 app.UseCors("AllowFrontend");
 
+app.UseStaticFiles();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();

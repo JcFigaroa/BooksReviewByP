@@ -34,6 +34,7 @@ namespace BusinessLayer.Services
             if (existing == null) return null;
 
             existing.Name = genre.Name;
+            existing.Id = genre.Id;
 
             await _repo.UpdateAsync(existing);
             return existing;

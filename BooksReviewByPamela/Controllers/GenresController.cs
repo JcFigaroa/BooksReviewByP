@@ -41,7 +41,11 @@ public class GenresController : ControllerBase
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, GenreDto dto)
     {
-        var updated = await _service.UpdateAsync(_mapper.Map<Genre>(dto));
+        var genre = _mapper.Map<Genre>(dto);
+        genre.Id = id;
+
+        var updated = await _service.UpdateAsync(genre);
+
         return updated == null ? NotFound() : Ok(updated);
     }
 
