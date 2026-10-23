@@ -14,5 +14,6 @@ namespace DataLayer.Interfaces
         Task AddAsync(Book book);
         Task UpdateAsync(Book book);
         Task DeleteAsync(int id);
+        Task<Book?> GetByTitleAsync(string title);
     }
 }

@@ -1,6 +1,7 @@
 ﻿using DataLayer.Interfaces;
 using Domain.Entities;
 using BusinessLayer.Interfaces;
+using BusinessLayer.Services.Validations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -26,7 +27,12 @@ namespace BusinessLayer.Services
 
         public async Task<Book> CreateAsync(Book book, List<int> genreIds)
         {
+            BookValidator.ValidateBook(book, genreIds);
             await _bookRepo.AddAsync(book);
+
+            var existingBook = await _bookRepo.GetByTitleAsync(book.Title);
+            if (existingBook != null)
+                throw new InvalidOperationException("A book with the same title already exists.");
 
             foreach (var genreId in genreIds)
             {
@@ -42,8 +48,15 @@ namespace BusinessLayer.Services
 
         public async Task<Book?> UpdateAsync(Book book, List<int> genreIds)
         {
+            BookValidator.ValidateBook(book, genreIds);
+
+            var existingBookWithTitle = await _bookRepo.GetByTitleAsync(book.Title);
+            if (existingBookWithTitle != null && existingBookWithTitle.Id != book.Id)
+                throw new InvalidOperationException("A book with the same title already exists.");
+
             var existing = await _bookRepo.GetByIdAsync(book.Id);
             if (existing == null) return null;
+
 
             existing.Title = book.Title;
             existing.Author = book.Author;
@@ -65,6 +78,7 @@ namespace BusinessLayer.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
+            if (id <= 0) throw new ArgumentException("Invalid book ID.");
             var existing = await _bookRepo.GetByIdAsync(id);
             if (existing == null) return false;
 
