@@ -1,4 +1,5 @@
 <Solution>
+  <Project Path="BooksReviewByPamela.Tests/BooksReviewByPamela.Tests.csproj" Id="0812ed0b-19d6-4919-ae07-ddb5c32ed89e" />
   <Project Path="BooksReviewByPamela/BooksReviewByPamela.csproj" />
   <Project Path="BusinessLayer/BusinessLayer.csproj" Id="47ee97af-1657-4fac-b333-dd0b218e212c" />
   <Project Path="DataLayer/DataLayer.csproj" Id="8713c805-109a-44f4-88a1-90da119dbe51" />
