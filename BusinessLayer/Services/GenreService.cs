@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLayer.Services.Validations;
 
 namespace BusinessLayer.Services
 {
@@ -24,17 +25,41 @@ namespace BusinessLayer.Services
 
         public async Task<Genre> CreateAsync(Genre genre)
         {
+            ValidateGenre.ValidateGenreData(genre);
+
+            var existing = await _repo.GetByIdAsync(genre.Id);
+            if (existing != null)
+            {
+                throw new ArgumentException($"Genre with ID {genre.Id} already exists.");
+            }
+
+            var existingByName = await _repo.GetByNameAsync(genre.Name);
+            if (existingByName != null)
+            {
+                throw new ArgumentException($"Genre with name '{genre.Name}' already exists.");
+            }
+
             await _repo.AddAsync(genre);
             return genre;
         }
 
         public async Task<Genre?> UpdateAsync(Genre genre)
         {
+
+            ValidateGenre.ValidateGenreData(genre);
+
+            var existingByName = await _repo.GetByNameAsync(genre.Name);
+            if (existingByName != null && existingByName.Id != genre.Id)
+            {
+                throw new ArgumentException($"Genre with name '{genre.Name}' already exists.");
+            }
+
             var existing = await _repo.GetByIdAsync(genre.Id);
             if (existing == null) return null;
 
             existing.Name = genre.Name;
             existing.Id = genre.Id;
+
 
             await _repo.UpdateAsync(existing);
             return existing;
@@ -42,6 +67,7 @@ namespace BusinessLayer.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
+
             var existing = await _repo.GetByIdAsync(id);
             if (existing == null) return false;
 

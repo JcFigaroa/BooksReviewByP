@@ -46,5 +46,12 @@ namespace DataLayer.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<Genre?> GetByNameAsync(string name)
+        {
+            return await _context.Genres
+                .FirstOrDefaultAsync(g =>
+                    g.Name.ToLower() == name.ToLower());
+        }
     }
 }

@@ -14,5 +14,6 @@ namespace DataLayer.Interfaces
         Task AddAsync(Genre genre);
         Task UpdateAsync(Genre genre);
         Task DeleteAsync(int id);
+        Task<Genre?> GetByNameAsync(string name);
     }
 }
