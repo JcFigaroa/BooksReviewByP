@@ -14,6 +14,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using BusinessLayer.Services.Validations;
 
 namespace BusinessLayer.Services
 {
@@ -30,6 +31,8 @@ namespace BusinessLayer.Services
 
         public async Task<string> LoginAsync(LoginDto dto)
         {
+            LoginValidator.Validate(dto);
+
             var user = await _userRepository.GetByEmailAsync(dto.Email);
 
             if (user == null)
