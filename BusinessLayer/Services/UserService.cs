@@ -1,6 +1,7 @@
 ﻿using DataLayer.Interfaces;
 using Domain.Entities;
 using BusinessLayer.Interfaces;
+using BusinessLayer.Services.Validations;
 using BCrypt.Net;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,22 @@ namespace BusinessLayer.Services
 
         public async Task<User> CreateAsync(User user)
         {
+            ValidateUser.ValidateUserData(user.UserName, user.Email, user.Password);
+
+            var existingUser = await _repo.GetByUsernameAsync(user.UserName);
+            if (existingUser != null)
+            {
+                throw new ArgumentException("Username already exists.");
+            }
+
+            var existingEmail = await _repo.GetByEmailAsync(user.Email);
+            if (existingEmail != null)
+            {
+                throw new ArgumentException("Email already exists.");
+            }
+
             user.Password = BCrypt.Net.BCrypt.HashPassword(user.Password);
+
 
             await _repo.AddAsync(user);
             return user;
@@ -33,6 +49,13 @@ namespace BusinessLayer.Services
 
         public async Task<User?> UpdateAsync(User user)
         {
+
+            var existingUser = await _repo.GetByUsernameAsync(user.UserName);
+            if (existingUser != null && existingUser.Id != user.Id)
+            {
+                throw new ArgumentException("Username already exists.");
+            }
+
             var existing = await _repo.GetByIdAsync(user.Id);
             if (existing == null) return null;
 
@@ -46,6 +69,8 @@ namespace BusinessLayer.Services
 
         public async Task<bool> DeleteAsync(int id)
         {
+            if (id <= 0) throw new ArgumentException("Invalid user ID.");
+
             var existing = await _repo.GetByIdAsync(id);
             if (existing == null) return false;
 
