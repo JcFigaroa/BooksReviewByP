@@ -27,10 +27,9 @@ export default function Hero() {
       <div aria-hidden className="absolute inset-0 -z-10 bg-gradient-to-t from-ink-900/70 via-ink-900/25 to-transparent" />
 
       <div className="flex aspect-[4/3] flex-col justify-end p-6 sm:aspect-[21/9] sm:p-10">
-        <p className="text-sm font-semibold uppercase tracking-widest text-frost-200">Welcome in</p>
-        <h1 className="mt-2 max-w-2xl text-4xl text-frost-50 sm:text-5xl">Readings Pattern</h1>
+        <p className="text-sm font-semibold uppercase tracking-widest text-frost-200"></p>
+        <h1 className="mt-2 max-w-2xl text-4xl text-frost-50 sm:text-5xl"></h1>
         <p className="mt-3 max-w-xl text-frost-100 sm:text-lg">
-          Honest reviews and quiet recommendations, one good book at a time.
         </p>
       </div>
     </section>
