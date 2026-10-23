@@ -30,9 +30,14 @@ namespace BusinessLayer.Services
             BookValidator.ValidateBook(book, genreIds);
 
             var existingBook = await _bookRepo.GetByTitleAsync(book.Title);
-            if (existingBook != null)
-                throw new InvalidOperationException("A book with the same title already exists.");
 
+            if (existingBook != null)
+                throw new ArgumentException("A book with the same title already exists.");
+
+            // Save book first
+            await _bookRepo.AddAsync(book);
+
+            // Now book.Id contains the generated database ID
             foreach (var genreId in genreIds)
             {
                 await _bookGenreRepo.AddAsync(new BookGenre
@@ -41,8 +46,6 @@ namespace BusinessLayer.Services
                     GenreId = genreId
                 });
             }
-
-            await _bookRepo.AddAsync(book);
 
             return book;
         }
