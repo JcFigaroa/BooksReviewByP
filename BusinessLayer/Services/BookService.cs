@@ -28,7 +28,6 @@ namespace BusinessLayer.Services
         public async Task<Book> CreateAsync(Book book, List<int> genreIds)
         {
             BookValidator.ValidateBook(book, genreIds);
-            await _bookRepo.AddAsync(book);
 
             var existingBook = await _bookRepo.GetByTitleAsync(book.Title);
             if (existingBook != null)
@@ -42,6 +41,8 @@ namespace BusinessLayer.Services
                     GenreId = genreId
                 });
             }
+
+            await _bookRepo.AddAsync(book);
 
             return book;
         }

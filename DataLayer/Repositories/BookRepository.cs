@@ -55,5 +55,13 @@ namespace DataLayer.Repositories
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<Book?> GetByTitleAsync(string title)
+        {
+            return await _context.Books
+                .Include(b => b.BookGenres)
+                .ThenInclude(bg => bg.Genre)
+                .FirstOrDefaultAsync(b => b.Title.ToLower() == title.ToLower());
+        }
     }
 }

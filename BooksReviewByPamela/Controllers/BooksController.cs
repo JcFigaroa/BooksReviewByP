@@ -35,12 +35,24 @@ public class BooksController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(BookDto dto)
     {
-        var book = _mapper.Map<Book>(dto);
-        book.UserId = 1;
+        try
+        {
+            var book = _mapper.Map<Book>(dto);
+            book.UserId = 1;
 
+            await _service.CreateAsync(book, dto.GenreIds);
 
-        await _service.CreateAsync(book, dto.GenreIds);
-        return CreatedAtAction(nameof(Get), new { id = book.Id }, book);
+            return CreatedAtAction(nameof(Get), new { id = book.Id }, book);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
+
+        catch (InvalidOperationException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPut("{id}")]
