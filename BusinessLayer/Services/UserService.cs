@@ -26,6 +26,8 @@ namespace BusinessLayer.Services
 
         public async Task<User> CreateAsync(User user)
         {
+            user.IsAdmin = false; // Ensure that new users are not admins by default
+
             ValidateUser.ValidateUserData(user.UserName, user.Email, user.Password);
 
             var existingUser = await _repo.GetByUsernameAsync(user.UserName);

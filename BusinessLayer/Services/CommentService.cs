@@ -37,5 +37,8 @@ namespace BusinessLayer.Services
             await _repo.DeleteAsync(id);
             return true;
         }
+
+        public Task<Comment?> GetByIdAsync(int id)
+            => _repo.GetByIdAsync(id);
     }
 }

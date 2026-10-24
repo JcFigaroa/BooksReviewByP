@@ -58,5 +58,23 @@ public class CommentsController : ControllerBase
     [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
-        => await _service.DeleteAsync(id) ? NoContent() : NotFound();
+    {
+        var comment = await _service.GetByIdAsync(id);
+
+        if (comment == null)
+            return NotFound();
+
+        var currentUserId =
+            int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+        var isAdmin =
+            User.FindFirst("isAdmin")?.Value == "True";
+
+        if (!isAdmin && comment.UserId != currentUserId)
+            return Forbid();
+
+        await _service.DeleteAsync(id);
+
+        return NoContent();
+    }
 }

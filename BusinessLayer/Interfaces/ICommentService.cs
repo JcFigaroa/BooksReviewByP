@@ -12,5 +12,6 @@ namespace BusinessLayer.Interfaces
         Task<List<Comment>> GetByBookIdAsync(int bookId);
         Task<Comment> CreateAsync(Comment comment);
         Task<bool> DeleteAsync(int id);
+        Task<Comment?> GetByIdAsync(int id);
     }
 }
