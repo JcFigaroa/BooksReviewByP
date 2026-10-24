@@ -9,7 +9,7 @@ import ConfirmDialog from "../admin/ConfirmDialog";
 const newestFirst = (a, b) => (parseApiDate(b.createdAt)?.getTime() ?? 0) - (parseApiDate(a.createdAt)?.getTime() ?? 0);
 
 export default function Comments({ bookId }) {
-  const { isAuthenticated, isAdmin, userId } = useContext(AuthContext);
+  const { isAuthenticated, isAdmin } = useContext(AuthContext);
   const location = useLocation();
 
   const [comments, setComments] = useState([]);
@@ -47,9 +47,14 @@ export default function Comments({ bookId }) {
     setPosting(true);
     setPostError("");
     try {
-      const saved = await createComment({ content: trimmed, bookId, userId });
-      setComments((prev) => [saved, ...prev]);
+      const saved = await createComment({ content: trimmed, bookId });
       setContent("");
+      // POST answers with the bare comment (no userName), so reload the list to show who wrote it
+      try {
+        setComments([...(await getComments(bookId))].sort(newestFirst));
+      } catch {
+        setComments((prev) => [saved, ...prev]);
+      }
     } catch (err) {
       setPostError(errorMessage(err, "Failed to post your comment"));
     } finally {
@@ -144,8 +149,7 @@ export default function Comments({ bookId }) {
 }
 
 function CommentItem({ comment, canDelete, onDelete }) {
-  // The API doesn't send the author's name yet; use it as soon as it does
-  const author = comment.userName || comment.user?.userName || "Reader";
+  const author = comment.userName || "Reader";
 
   return (
     <li className="card animate-fade-up p-4 sm:p-5">
