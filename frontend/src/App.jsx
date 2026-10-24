@@ -4,6 +4,7 @@ import Register from "./pages/Register";
 import Books from "./pages/Books";
 import BookDetails from "./pages/BookDetails";
 import Navbar from "./components/Navbar";
+import Snowfall from "./components/Snowfall";
 import AdminDashboard from "./pages/AdminDashboard";
 import AdminRoute from "./routes/AdminRoute";
 
@@ -11,6 +12,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Navbar />
+      <Snowfall />
 
       <Routes>
         <Route path="/login" element={<Login />} />
