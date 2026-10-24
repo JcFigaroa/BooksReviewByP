@@ -23,7 +23,15 @@ public class CommentsController : ControllerBase
 
     [HttpGet("book/{bookId}")]
     public async Task<IActionResult> GetByBook(int bookId)
-        => Ok(await _service.GetByBookIdAsync(bookId));
+    {
+        var comments =
+            await _service.GetByBookIdAsync(bookId);
+
+        var response =
+            _mapper.Map<List<CommentResponseDto>>(comments);
+
+        return Ok(response);
+    }
 
     [Authorize]
     [HttpPost]
@@ -47,6 +55,7 @@ public class CommentsController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
         => await _service.DeleteAsync(id) ? NoContent() : NotFound();
