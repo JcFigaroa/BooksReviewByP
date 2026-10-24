@@ -15,9 +15,9 @@ export default function AboutMe() {
   return (
     <section aria-labelledby="about-heading" className="card grid items-center gap-8 p-6 sm:p-10 md:grid-cols-[3fr_2fr]">
       <div>
-        <p className="text-sm font-semibold uppercase tracking-widest text-berry-600">About me</p>
-        <h2 id="about-heading" className="mt-1 text-3xl text-ink-900">A little about the reader</h2>
-        <div className="mt-4 space-y-4 leading-relaxed text-ink-700">
+        <p className="font-script text-4xl leading-none text-berry-600">About me</p>
+        <h2 id="about-heading" className="mt-2 font-literary text-3xl font-semibold text-ink-900 sm:text-4xl">A little about the reader</h2>
+        <div className="mt-4 space-y-4 font-literary text-xl leading-relaxed text-ink-700">
           {paragraphs.map((text) => (
             <p key={text}>{text}</p>
           ))}

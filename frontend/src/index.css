@@ -37,6 +37,11 @@
     @apply btn bg-pine-600 text-white hover:bg-pine-700 focus-visible:ring-pine-100;
   }
 
+  /* Dark Christmas red button used on the home page */
+  .btn-accent {
+    @apply btn bg-berry-600 text-white hover:bg-berry-700 focus-visible:ring-berry-100;
+  }
+
   .btn-ghost {
     @apply btn text-ink-700 hover:bg-frost-100 focus-visible:ring-frost-200;
   }

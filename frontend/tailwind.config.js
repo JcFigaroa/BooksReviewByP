@@ -47,6 +47,8 @@ export default {
       fontFamily: {
         serif: ['"Fraunces"', "Georgia", "serif"],
         sans: ['"Nunito"', "system-ui", "sans-serif"],
+        script: ['"Great Vibes"', "cursive"],
+        literary: ['"Cormorant Garamond"', "Georgia", "serif"],
       },
       boxShadow: {
         cozy: "0 1px 2px rgba(42, 32, 30, 0.04), 0 8px 24px -12px rgba(42, 32, 30, 0.16)",
