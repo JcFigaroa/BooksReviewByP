@@ -2,12 +2,18 @@ import { createContext, useState } from "react";
 
 export const AuthContext = createContext();
 
-function readIsAdmin(token) {
+function readPayload(token) {
   try {
-    return JSON.parse(atob(token.split(".")[1])).isAdmin === "True";
+    return JSON.parse(atob(token.split(".")[1]));
   } catch {
-    return false;
+    return {};
   }
+}
+
+// LoginService puts the user id in ClaimTypes.NameIdentifier, which the JWT handler writes as "nameid"
+function readUserId(payload) {
+  const id = payload.nameid ?? payload.sub ?? payload["http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier"];
+  return id ? Number(id) : null;
 }
 
 export function AuthProvider({ children }) {
@@ -24,10 +30,13 @@ export function AuthProvider({ children }) {
   };
 
   const isAuthenticated = Boolean(token);
-  const isAdmin = isAuthenticated && readIsAdmin(token);
+  const payload = isAuthenticated ? readPayload(token) : {};
+  const isAdmin = payload.isAdmin === "True";
+  const userId = readUserId(payload);
+  const email = payload.email ?? null;
 
   return (
-    <AuthContext.Provider value={{ token, isAuthenticated, isAdmin, login, logout }}>
+    <AuthContext.Provider value={{ token, isAuthenticated, isAdmin, userId, email, login, logout }}>
       {children}
     </AuthContext.Provider>
   );

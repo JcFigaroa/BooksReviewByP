@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import api from "../api/axios";
 import BookCover from "../components/BookCover";
 import Hero from "../components/home/Hero";
@@ -44,11 +45,15 @@ export default function Books() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
               {books.map((book) => (
-                <div key={book.id} className="card flex flex-col overflow-hidden transition hover:-translate-y-0.5">
+                <Link
+                  key={book.id}
+                  to={`/books/${book.id}`}
+                  className="card group flex flex-col overflow-hidden transition hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-pine-100"
+                >
                   <BookCover book={book} className="aspect-[2/3] w-full text-6xl" />
 
                   <div className="flex flex-1 flex-col p-4">
-                    <h3 className="text-xl text-ink-900">{book.title}</h3>
+                    <h3 className="text-xl text-ink-900 transition group-hover:text-pine-600">{book.title}</h3>
 
                     <p className="text-ink-500 mt-1">{book.author}</p>
 
@@ -69,10 +74,10 @@ export default function Books() {
                     </p>
 
                     <div className="mt-auto pt-4">
-                      <button className="btn-primary w-full">View Details</button>
+                      <span className="btn-primary w-full">View Details</span>
                     </div>
                   </div>
-                </div>
+                </Link>
               ))}
             </div>
           )}
