@@ -16,7 +16,6 @@ export default function App() {
         <Route path="/" element={<Books />} />
         <Route path="/books" element={<Books />} />
         <Route path="/books/:id" element={<BookDetails />} />
-        <Route path="/contact" element={<div>Contact Page</div>} />
         <Route
   path="/admin"
   element={
