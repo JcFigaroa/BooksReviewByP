@@ -1,8 +1,10 @@
-﻿using BusinessLayer.Interfaces;
+﻿using AutoMapper;
+using BusinessLayer.Interfaces;
 using Domain.DTOs;
 using Domain.Entities;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using AutoMapper;
+using System.Security.Claims;
 
 namespace BooksReviewByPamela.Controllers;
 
@@ -23,6 +25,7 @@ public class CommentsController : ControllerBase
     public async Task<IActionResult> GetByBook(int bookId)
         => Ok(await _service.GetByBookIdAsync(bookId));
 
+    [Authorize]
     [HttpPost]
     public async Task<IActionResult> Create(CommentDto dto)
     {
@@ -30,7 +33,9 @@ public class CommentsController : ControllerBase
         {
             var comment = _mapper.Map<Comment>(dto);
 
-            comment.UserId = 1;
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+
+            comment.UserId = userId;
 
             await _service.CreateAsync(comment);
 
