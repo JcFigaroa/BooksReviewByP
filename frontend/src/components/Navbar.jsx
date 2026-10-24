@@ -11,7 +11,7 @@ export default function Navbar() {
   return (
     <nav className="sticky top-0 z-30 flex min-h-16 flex-wrap items-center justify-between gap-x-6 gap-y-2 py-3 border-b border-frost-200 bg-frost-50/80 px-4 backdrop-blur sm:px-6">
       {/* LEFT SIDE - BRAND */}
-      <Link to="/books" className="whitespace-nowrap font-serif text-xl font-semibold text-ink-900 sm:text-2xl">
+      <Link to="/books" className="whitespace-nowrap font-script text-3xl leading-none text-berry-600 sm:text-4xl">
         Readings Pattern
       </Link>
 

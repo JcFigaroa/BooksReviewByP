@@ -64,7 +64,7 @@ export default function Books() {
         <AboutMe />
 
         <section aria-labelledby="books-heading">
-          <h2 id="books-heading" className="mb-6 text-3xl text-ink-900">Books</h2>
+          <h2 id="books-heading" className="mb-6 font-script text-5xl font-normal leading-tight text-berry-600">Books</h2>
 
           {books.length > 0 && (
             <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
@@ -97,7 +97,7 @@ export default function Books() {
                   placeholder="Search by title or author…"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  className="input py-2 pl-10"
+                  className="input py-2 pl-10 focus:border-berry-600 focus:ring-berry-100"
                   aria-label="Search books by title or author"
                 />
               </div>
@@ -107,7 +107,7 @@ export default function Books() {
           {isFiltering && !loading && !error && books.length > 0 && (
             <p className="mb-4 text-sm text-ink-500" aria-live="polite">
               Showing {visibleBooks.length} of {books.length} {books.length === 1 ? "book" : "books"}
-              <button onClick={clearFilters} className="ml-2 font-semibold text-pine-600 underline-offset-2 hover:underline">
+              <button onClick={clearFilters} className="ml-2 font-semibold text-berry-600 underline-offset-2 hover:underline">
                 Clear filters
               </button>
             </p>
@@ -124,7 +124,7 @@ export default function Books() {
               <span aria-hidden className="text-4xl">📚</span>
               <h3 className="mt-3 text-xl text-ink-900">No books match</h3>
               <p className="mt-1 max-w-sm text-sm text-ink-500">Try a different title, author or genre.</p>
-              <button className="btn-primary mt-5" onClick={clearFilters}>
+              <button className="btn-accent mt-5" onClick={clearFilters}>
                 Show all books
               </button>
             </div>
@@ -134,12 +134,12 @@ export default function Books() {
                 <Link
                   key={book.id}
                   to={`/books/${book.id}`}
-                  className="card group flex flex-col overflow-hidden transition hover:-translate-y-0.5 focus:outline-none focus-visible:ring-4 focus-visible:ring-pine-100"
+                  className="card group flex flex-col overflow-hidden transition hover:-translate-y-0.5 hover:border-berry-600/40 focus:outline-none focus-visible:ring-4 focus-visible:ring-berry-100"
                 >
                   <BookCover book={book} className="aspect-[2/3] w-full text-6xl" />
 
                   <div className="flex flex-1 flex-col p-4">
-                    <h3 className="text-xl text-ink-900 transition group-hover:text-pine-600">{book.title}</h3>
+                    <h3 className="text-xl text-ink-900 transition group-hover:text-berry-600">{book.title}</h3>
 
                     <p className="text-ink-500 mt-1">{book.author}</p>
 
@@ -160,7 +160,7 @@ export default function Books() {
                     </p>
 
                     <div className="mt-auto pt-4">
-                      <span className="btn-primary w-full">View Details</span>
+                      <span className="btn-accent w-full group-hover:bg-berry-700">View Details</span>
                     </div>
                   </div>
                 </Link>
@@ -179,10 +179,10 @@ function GenreChip({ active, onClick, children }) {
       type="button"
       onClick={onClick}
       aria-pressed={active}
-      className={`chip px-4 py-1.5 text-sm transition focus:outline-none focus-visible:ring-4 focus-visible:ring-pine-100 ${
+      className={`chip px-4 py-1.5 text-sm transition focus:outline-none focus-visible:ring-4 focus-visible:ring-berry-100 ${
         active
-          ? "border-pine-600 bg-pine-600 text-frost-50"
-          : "border-frost-300 bg-white text-ink-700 hover:border-pine-500 hover:text-pine-600"
+          ? "border-berry-600 bg-berry-600 text-frost-50"
+          : "border-frost-300 bg-white text-ink-700 hover:border-berry-600 hover:text-berry-600"
       }`}
     >
       {children}
