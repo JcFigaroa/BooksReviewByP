@@ -64,11 +64,28 @@ export default function Books() {
         <AboutMe />
 
         <section aria-labelledby="books-heading">
-          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <h2 id="books-heading" className="text-3xl text-ink-900">Books</h2>
+          <h2 id="books-heading" className="mb-6 text-3xl text-ink-900">Books</h2>
 
-            {books.length > 0 && (
-              <div className="relative w-full sm:max-w-sm">
+          {books.length > 0 && (
+            <div className="mb-6 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+              {genres.length > 0 && (
+                <div className="order-2 flex flex-wrap gap-2 lg:order-1" role="group" aria-label="Filter by genre">
+                  <GenreChip active={genreFilter === null} onClick={() => setGenreFilter(null)}>
+                    All genres
+                  </GenreChip>
+                  {genres.map((genre) => (
+                    <GenreChip
+                      key={genre.id}
+                      active={genreFilter === genre.id}
+                      onClick={() => setGenreFilter(genreFilter === genre.id ? null : genre.id)}
+                    >
+                      {genre.name}
+                    </GenreChip>
+                  ))}
+                </div>
+              )}
+
+              <div className="relative order-1 w-full shrink-0 lg:order-2 lg:ml-auto lg:max-w-xs">
                 <span aria-hidden className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-ink-400">
                   <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="2" className="h-4 w-4">
                     <circle cx="9" cy="9" r="6" />
@@ -80,27 +97,10 @@ export default function Books() {
                   placeholder="Search by title or author…"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  className="input pl-10"
+                  className="input py-2 pl-10"
                   aria-label="Search books by title or author"
                 />
               </div>
-            )}
-          </div>
-
-          {genres.length > 0 && (
-            <div className="mb-6 flex flex-wrap gap-2" role="group" aria-label="Filter by genre">
-              <GenreChip active={genreFilter === null} onClick={() => setGenreFilter(null)}>
-                All genres
-              </GenreChip>
-              {genres.map((genre) => (
-                <GenreChip
-                  key={genre.id}
-                  active={genreFilter === genre.id}
-                  onClick={() => setGenreFilter(genreFilter === genre.id ? null : genre.id)}
-                >
-                  {genre.name}
-                </GenreChip>
-              ))}
             </div>
           )}
 
