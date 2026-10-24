@@ -3,18 +3,18 @@ import { getBooks, createBook, updateBook, deleteBook, uploadBookCover } from ".
 import { getGenres, createGenre, updateGenre, deleteGenre } from "../api/genres";
 import { errorMessage } from "../api/errors";
 import BooksPanel from "../components/admin/BooksPanel";
-import LabelsPanel from "../components/admin/LabelsPanel";
+import GenresPanel from "../components/admin/GenresPanel";
 import Toasts from "../components/admin/Toasts";
 import Snowfall from "../components/admin/Snowfall";
 
 const tabs = [
   { id: "books", label: "Books", icon: "📖" },
-  { id: "labels", label: "Labels", icon: "🏷️" },
+  { id: "genres", label: "Genres", icon: "🏷️" },
 ];
 
 export default function AdminDashboard() {
   const [books, setBooks] = useState([]);
-  const [labels, setLabels] = useState([]);
+  const [genres, setGenres] = useState([]);
   const [loading, setLoading] = useState(true);
   const [loadError, setLoadError] = useState("");
   const [tab, setTab] = useState("books");
@@ -28,9 +28,9 @@ export default function AdminDashboard() {
 
   const loadAll = useCallback(async () => {
     try {
-      const [bookData, labelData] = await Promise.all([getBooks(), getGenres()]);
+      const [bookData, genreData] = await Promise.all([getBooks(), getGenres()]);
       setBooks(bookData);
-      setLabels(labelData);
+      setGenres(genreData);
       setLoadError("");
     } catch (err) {
       setLoadError(errorMessage(err, "Couldn't load the library"));
@@ -91,13 +91,13 @@ export default function AdminDashboard() {
     onDelete: (id) => run(() => deleteBook(id), "Book deleted.", "Couldn't delete the book"),
   };
 
-  const labelHandlers = {
-    onCreate: (name) => run(() => createGenre(name), `Label “${name.trim()}” added.`, "Couldn't add the label"),
-    onUpdate: (id, name) => run(() => updateGenre(id, name), "Label renamed.", "Couldn't rename the label"),
-    onDelete: (id) => run(() => deleteGenre(id), "Label deleted.", "Couldn't delete the label"),
+  const genreHandlers = {
+    onCreate: (name) => run(() => createGenre(name), `Genre “${name.trim()}” added.`, "Couldn't add the genre"),
+    onUpdate: (id, name) => run(() => updateGenre(id, name), "Genre renamed.", "Couldn't rename the genre"),
+    onDelete: (id) => run(() => deleteGenre(id), "Genre deleted.", "Couldn't delete the genre"),
   };
 
-  const unlabeled = books.filter((b) => !b.bookGenres?.length).length;
+  const withoutGenre = books.filter((b) => !b.bookGenres?.length).length;
   const newest = [...books].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
 
   return (
@@ -109,7 +109,7 @@ export default function AdminDashboard() {
           <p className="text-sm font-semibold uppercase tracking-widest text-pine-600">Admin</p>
           <h1 className="mt-1 text-3xl text-ink-900 sm:text-4xl">The reading room</h1>
           <p className="mt-2 max-w-xl text-ink-500">
-            Tend to the collection: shelve new books, tidy up details, and keep labels in order.
+            Tend to the collection: shelve new books, tidy up details, and keep genres in order.
           </p>
         </header>
 
@@ -135,8 +135,8 @@ export default function AdminDashboard() {
           <>
             <dl className="mb-8 grid grid-cols-2 gap-3 lg:grid-cols-4">
               <Stat label="Books" value={books.length} />
-              <Stat label="Labels" value={labels.length} />
-              <Stat label="Unlabeled books" value={unlabeled} />
+              <Stat label="Genres" value={genres.length} />
+              <Stat label="Books without a genre" value={withoutGenre} />
               <Stat label="Newest arrival" value={newest?.title ?? "—"} small />
             </dl>
 
@@ -156,9 +156,9 @@ export default function AdminDashboard() {
             </div>
 
             {tab === "books" ? (
-              <BooksPanel books={books} labels={labels} {...bookHandlers} />
+              <BooksPanel books={books} genres={genres} {...bookHandlers} />
             ) : (
-              <LabelsPanel labels={labels} books={books} {...labelHandlers} />
+              <GenresPanel genres={genres} books={books} {...genreHandlers} />
             )}
           </>
         )}
