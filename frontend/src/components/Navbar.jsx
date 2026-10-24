@@ -21,10 +21,6 @@ export default function Navbar() {
           Home
         </NavLink>
 
-        <NavLink to="/contact" className={linkClass}>
-          Contact Me
-        </NavLink>
-
         {isAdmin && (
           <NavLink to="/admin" className={linkClass}>
             Admin
