@@ -23,7 +23,10 @@ export default function Login() {
       console.log("TOKEN PAYLOAD:", payload);
       const isAdmin = payload.isAdmin === "True";
 
-      window.location.href = isAdmin ? "/admin" : "/books";
+      // Send readers back to the page that asked them to log in (e.g. a book's comments)
+      const redirect = new URLSearchParams(window.location.search).get("redirect");
+      const safeRedirect = redirect?.startsWith("/") && !redirect.startsWith("//") ? redirect : null;
+      window.location.href = safeRedirect || (isAdmin ? "/admin" : "/books");
     } catch {
       setError("Invalid email or password");
     }
