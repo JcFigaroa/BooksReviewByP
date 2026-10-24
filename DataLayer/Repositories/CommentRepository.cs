@@ -20,11 +20,15 @@ namespace DataLayer.Repositories
         }
 
         public async Task<Comment?> GetByIdAsync(int id)
-            => await _context.Comments.FindAsync(id);
+            => await _context.Comments
+                .Include(c => c.User)
+                .FirstOrDefaultAsync(c => c.Id == id);
 
         public async Task<List<Comment>> GetByBookIdAsync(int bookId)
             => await _context.Comments
+                .Include(c => c.User)
                 .Where(c => c.BookId == bookId)
+                .OrderByDescending(c => c.CreatedAt)
                 .ToListAsync();
 
         public async Task AddAsync(Comment comment)
