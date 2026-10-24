@@ -81,7 +81,7 @@ export default function BookDetails() {
 
                 <div className="my-6 h-px bg-frost-200" />
 
-                <h2 className="text-sm font-semibold uppercase tracking-widest text-pine-600">About this book</h2>
+                <h2 className="font-script text-4xl font-normal leading-tight text-berry-600">About this book</h2>
                 <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-ink-700 sm:text-lg">
                   {book.description || "No description yet."}
                 </p>
@@ -105,7 +105,7 @@ function Message({ title, children }) {
     <div className="card p-8 text-center sm:p-12">
       <h1 className="text-2xl text-ink-900">{title}</h1>
       <p className="mx-auto mt-2 max-w-md text-ink-500">{children}</p>
-      <Link to="/books" className="btn-primary mt-6">
+      <Link to="/books" className="btn-accent mt-6">
         Browse books
       </Link>
     </div>

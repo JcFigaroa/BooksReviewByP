@@ -75,7 +75,7 @@ export default function Comments({ bookId }) {
   return (
     <section aria-labelledby="comments-heading" className="space-y-5">
       <div className="flex items-baseline gap-3">
-        <h2 id="comments-heading" className="text-3xl text-ink-900">
+        <h2 id="comments-heading" className="font-script text-5xl font-normal leading-tight text-berry-600">
           Comments
         </h2>
         {!loading && !loadError && <span className="text-ink-400">{comments.length}</span>}
@@ -93,14 +93,14 @@ export default function Comments({ bookId }) {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             placeholder="What did you think of this book?"
-            className="input resize-y"
+            className="input resize-y focus:border-berry-600 focus:ring-berry-100"
           />
 
           <div className="mt-3 flex flex-wrap items-center justify-between gap-3">
             <p className={`text-xs ${tooShort ? "text-berry-600" : "text-ink-400"}`}>
               {tooShort ? `At least ${COMMENT_MIN} characters` : `${trimmed.length} / ${COMMENT_MAX}`}
             </p>
-            <button type="submit" className="btn-primary" disabled={!canPost}>
+            <button type="submit" className="btn-accent" disabled={!canPost}>
               {posting ? "Posting..." : "Post comment"}
             </button>
           </div>
@@ -110,7 +110,7 @@ export default function Comments({ bookId }) {
       ) : (
         <div className="card flex flex-wrap items-center justify-between gap-3 p-4 sm:p-5">
           <p className="text-ink-700">Log in to join the conversation.</p>
-          <Link to={`/login?redirect=${encodeURIComponent(location.pathname)}`} className="btn-primary">
+          <Link to={`/login?redirect=${encodeURIComponent(location.pathname)}`} className="btn-accent">
             Log in to comment
           </Link>
         </div>
@@ -155,7 +155,7 @@ function CommentItem({ comment, canDelete, onDelete }) {
       <div className="flex items-start gap-3">
         <div
           aria-hidden
-          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-pine-50 font-serif text-lg text-pine-600"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-berry-50 font-serif text-lg text-berry-600"
         >
           {author.charAt(0).toUpperCase()}
         </div>
