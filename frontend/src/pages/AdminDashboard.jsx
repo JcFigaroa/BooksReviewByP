@@ -5,7 +5,6 @@ import { errorMessage } from "../api/errors";
 import BooksPanel from "../components/admin/BooksPanel";
 import GenresPanel from "../components/admin/GenresPanel";
 import Toasts from "../components/admin/Toasts";
-import Snowfall from "../components/admin/Snowfall";
 
 const tabs = [
   { id: "books", label: "Books", icon: "📖" },
@@ -101,9 +100,7 @@ export default function AdminDashboard() {
   const newest = [...books].sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt))[0];
 
   return (
-    <div className="relative min-h-[calc(100vh-4rem)]">
-      <Snowfall />
-
+    <div className="relative min-h-[calc(100vh-4rem)] bg-gradient-to-b from-frost-100 via-frost-50 to-ember-50/60">
       <main className="relative mx-auto max-w-6xl px-4 py-8 sm:px-6 lg:py-12">
         <header className="mb-8">
           <p className="text-sm font-semibold uppercase tracking-widest text-pine-600">Admin</p>

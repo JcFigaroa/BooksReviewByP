@@ -64,13 +64,15 @@
   }
 }
 
-/* Gentle snowfall drifting behind the admin dashboard */
+/* Gentle snowfall drifting across every page */
 .snowflake {
   position: absolute;
   top: 0;
   border-radius: 9999px;
-  background: theme("colors.frost.400");
-  opacity: 0.45;
+  /* White with a soft edge so flakes read on both light pages and the dark hero */
+  background: white;
+  box-shadow: 0 0 4px rgba(95, 111, 130, 0.7);
+  opacity: 0.85;
   animation-name: snow;
   animation-timing-function: linear;
   animation-iteration-count: infinite;
