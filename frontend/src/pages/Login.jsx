@@ -1,6 +1,13 @@
 import { useState, useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
+import { Link } from "react-router-dom";
 import api from "../api/axios";
+
+// Carry the redirect over so a new reader lands back where they started
+function registerLink() {
+  const redirect = new URLSearchParams(window.location.search).get("redirect");
+  return redirect ? `/register?redirect=${encodeURIComponent(redirect)}` : "/register";
+}
 
 export default function Login() {
   const { login } = useContext(AuthContext);
@@ -81,6 +88,13 @@ export default function Login() {
             Login
           </button>
         </form>
+
+        <p className="mt-6 text-center text-sm text-ink-700">
+          New here?{" "}
+          <Link to={registerLink()} className="font-semibold text-pine-700 hover:underline">
+            Create an account
+          </Link>
+        </p>
       </div>
     </div>
   );
