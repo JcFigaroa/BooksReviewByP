@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { siteImageUrl } from "../../api/images";
 
-const profileSrc = siteImageUrl("profile.jpg");
+const profileSrc = siteImageUrl("profileCat.jpg");
 
 // Placeholder copy: replace with the real introduction.
 const paragraphs = [

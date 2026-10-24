@@ -1,6 +1,7 @@
 ﻿using DataLayer.Interfaces;
 using Domain.Entities;
 using BusinessLayer.Interfaces;
+using BusinessLayer.Services.Validations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace BusinessLayer.Services
 
         public async Task<Comment> CreateAsync(Comment comment)
         {
+            CommentValidator.ValidateComment(comment);
             await _repo.AddAsync(comment);
             return comment;
         }

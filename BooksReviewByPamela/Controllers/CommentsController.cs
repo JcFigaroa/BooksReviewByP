@@ -26,11 +26,20 @@ public class CommentsController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(CommentDto dto)
     {
-        var comment = _mapper.Map<Comment>(dto);
+        try
+        {
+            var comment = _mapper.Map<Comment>(dto);
 
+            comment.UserId = 1;
 
-        await _service.CreateAsync(comment);
-        return Ok(comment);
+            await _service.CreateAsync(comment);
+
+            return Ok(comment);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpDelete("{id}")]
