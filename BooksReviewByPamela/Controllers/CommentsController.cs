@@ -47,7 +47,12 @@ public class CommentsController : ControllerBase
 
             await _service.CreateAsync(comment);
 
-            return Ok(comment);
+            var createdComment = await _service.GetByIdAsync(comment.Id);
+
+            var response =
+                _mapper.Map<CommentResponseDto>(createdComment);
+
+            return Ok(response);
         }
         catch (ArgumentException ex)
         {
@@ -59,22 +64,29 @@ public class CommentsController : ControllerBase
     [HttpDelete("{id}")]
     public async Task<IActionResult> Delete(int id)
     {
-        var comment = await _service.GetByIdAsync(id);
+        try
+        {
+            var comment = await _service.GetByIdAsync(id);
 
-        if (comment == null)
-            return NotFound();
+            if (comment == null)
+                return NotFound();
 
-        var currentUserId =
-            int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
+            var currentUserId =
+                int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)!.Value);
 
-        var isAdmin =
-            User.FindFirst("isAdmin")?.Value == "True";
+            var isAdmin =
+                User.FindFirst("isAdmin")?.Value == "True";
 
-        if (!isAdmin && comment.UserId != currentUserId)
-            return Forbid();
+            if (!isAdmin && comment.UserId != currentUserId)
+                return Forbid();
 
-        await _service.DeleteAsync(id);
+            await _service.DeleteAsync(id);
 
-        return NoContent();
+            return NoContent();
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 }

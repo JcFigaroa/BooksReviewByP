@@ -33,18 +33,41 @@ public class UsersController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> Create(UserCreateDto dto)
     {
-        var user = _mapper.Map<User>(dto);
+        try
+        {
+            var user = _mapper.Map<User>(dto);
 
-        await _service.CreateAsync(user);
-        return CreatedAtAction(nameof(Get), new { id = user.Id }, user);
+            await _service.CreateAsync(user);
+
+            return CreatedAtAction(
+                nameof(Get),
+                new { id = user.Id },
+                user);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpPut("{id}")]
     public async Task<IActionResult> Update(int id, UserDto dto)
     {
-        var updated = await _service.UpdateAsync(_mapper.Map<User>(dto));
+        try
+        {
+            var user = _mapper.Map<User>(dto);
+            user.Id = id;
 
-        return updated == null ? NotFound() : Ok(updated);
+            var updated = await _service.UpdateAsync(user);
+
+            return updated == null
+                ? NotFound()
+                : Ok(updated);
+        }
+        catch (ArgumentException ex)
+        {
+            return BadRequest(ex.Message);
+        }
     }
 
     [HttpDelete("{id}")]

@@ -19,12 +19,19 @@ namespace BooksReviewByPamela.Controllers
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] LoginDto dto)
         {
-            var token = await _loginService.LoginAsync(dto);
+            try
+            {
+                var token = await _loginService.LoginAsync(dto);
 
-            if (token == null)
-                return Unauthorized("Invalid email or password");
+                if (token == null)
+                    return Unauthorized("Invalid email or password");
 
-            return Ok(new { token });
+                return Ok(new { token });
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
