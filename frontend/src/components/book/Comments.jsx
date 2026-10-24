@@ -9,7 +9,7 @@ import ConfirmDialog from "../admin/ConfirmDialog";
 const newestFirst = (a, b) => (parseApiDate(b.createdAt)?.getTime() ?? 0) - (parseApiDate(a.createdAt)?.getTime() ?? 0);
 
 export default function Comments({ bookId }) {
-  const { isAuthenticated, isAdmin } = useContext(AuthContext);
+  const { isAuthenticated, isAdmin, userId } = useContext(AuthContext);
   const location = useLocation();
 
   const [comments, setComments] = useState([]);
@@ -48,13 +48,8 @@ export default function Comments({ bookId }) {
     setPostError("");
     try {
       const saved = await createComment({ content: trimmed, bookId });
+      setComments((prev) => [saved, ...prev]);
       setContent("");
-      // POST answers with the bare comment (no userName), so reload the list to show who wrote it
-      try {
-        setComments([...(await getComments(bookId))].sort(newestFirst));
-      } catch {
-        setComments((prev) => [saved, ...prev]);
-      }
     } catch (err) {
       setPostError(errorMessage(err, "Failed to post your comment"));
     } finally {
@@ -67,7 +62,11 @@ export default function Comments({ bookId }) {
       await deleteComment(id);
       setComments((prev) => prev.filter((c) => c.id !== id));
     } catch (err) {
-      setPostError(errorMessage(err, "Failed to delete the comment"));
+      setPostError(
+        err?.response?.status === 403
+          ? "You can only delete your own comments."
+          : errorMessage(err, "Failed to delete the comment"),
+      );
     } finally {
       setPendingDelete(null);
     }
@@ -129,7 +128,7 @@ export default function Comments({ bookId }) {
             <CommentItem
               key={comment.id}
               comment={comment}
-              canDelete={isAdmin}
+              canDelete={isAdmin || (userId != null && comment.userId === userId)}
               onDelete={() => setPendingDelete(comment)}
             />
           ))}
