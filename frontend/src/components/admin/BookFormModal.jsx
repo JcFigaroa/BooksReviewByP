@@ -6,7 +6,7 @@ const MAX_COVER_MB = 5;
 
 const emptyBook = { title: "", author: "", description: "", genreIds: [], coverFile: null };
 
-export default function BookFormModal({ book, labels, onSave, onClose }) {
+export default function BookFormModal({ book, genres, onSave, onClose }) {
   const isEditing = Boolean(book);
   const [form, setForm] = useState(() =>
     book
@@ -51,7 +51,7 @@ export default function BookFormModal({ book, labels, onSave, onClose }) {
     setForm({ ...form, [e.target.name]: e.target.value });
   }
 
-  function toggleLabel(id) {
+  function toggleGenre(id) {
     setForm((prev) => ({
       ...prev,
       genreIds: prev.genreIds.includes(id) ? prev.genreIds.filter((x) => x !== id) : [...prev.genreIds, id],
@@ -143,19 +143,19 @@ export default function BookFormModal({ book, labels, onSave, onClose }) {
         </div>
 
         <fieldset>
-          <legend className="label">Labels</legend>
-          {labels.length === 0 ? (
-            <p className="text-sm text-ink-500">No labels yet. Create some in the Labels tab first.</p>
+          <legend className="label">Genres</legend>
+          {genres.length === 0 ? (
+            <p className="text-sm text-ink-500">No genres yet. Create some in the Genres tab first.</p>
           ) : (
             <div className="flex flex-wrap gap-2">
-              {labels.map((label) => {
-                const selected = form.genreIds.includes(label.id);
+              {genres.map((genre) => {
+                const selected = form.genreIds.includes(genre.id);
                 return (
                   <button
-                    key={label.id}
+                    key={genre.id}
                     type="button"
                     aria-pressed={selected}
-                    onClick={() => toggleLabel(label.id)}
+                    onClick={() => toggleGenre(genre.id)}
                     className={`chip transition ${
                       selected
                         ? "border-pine-500 bg-pine-600 text-white"
@@ -163,7 +163,7 @@ export default function BookFormModal({ book, labels, onSave, onClose }) {
                     }`}
                   >
                     {selected && <span aria-hidden>✓</span>}
-                    {label.name}
+                    {genre.name}
                   </button>
                 );
               })}

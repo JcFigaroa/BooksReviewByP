@@ -3,9 +3,9 @@ import BookFormModal from "./BookFormModal";
 import ConfirmDialog from "./ConfirmDialog";
 import BookCover from "../BookCover";
 
-export default function BooksPanel({ books, labels, onCreate, onUpdate, onDelete }) {
+export default function BooksPanel({ books, genres, onCreate, onUpdate, onDelete }) {
   const [query, setQuery] = useState("");
-  const [labelFilter, setLabelFilter] = useState("");
+  const [genreFilter, setGenreFilter] = useState("");
   const [editing, setEditing] = useState(null); // null = closed, "new" = create, book = edit
   const [deleting, setDeleting] = useState(null);
 
@@ -13,10 +13,10 @@ export default function BooksPanel({ books, labels, onCreate, onUpdate, onDelete
     const q = query.trim().toLowerCase();
     return books.filter((book) => {
       const matchesQuery = !q || book.title.toLowerCase().includes(q) || book.author.toLowerCase().includes(q);
-      const matchesLabel = !labelFilter || book.bookGenres?.some((bg) => bg.genreId === Number(labelFilter));
-      return matchesQuery && matchesLabel;
+      const matchesGenre = !genreFilter || book.bookGenres?.some((bg) => bg.genreId === Number(genreFilter));
+      return matchesQuery && matchesGenre;
     });
-  }, [books, query, labelFilter]);
+  }, [books, query, genreFilter]);
 
   async function handleSave(form) {
     const ok = editing === "new" ? await onCreate(form) : await onUpdate(editing.id, form);
@@ -39,15 +39,15 @@ export default function BooksPanel({ books, labels, onCreate, onUpdate, onDelete
           aria-label="Search books"
         />
         <select
-          value={labelFilter}
-          onChange={(e) => setLabelFilter(e.target.value)}
+          value={genreFilter}
+          onChange={(e) => setGenreFilter(e.target.value)}
           className="input sm:max-w-[12rem]"
-          aria-label="Filter by label"
+          aria-label="Filter by genre"
         >
-          <option value="">All labels</option>
-          {labels.map((label) => (
-            <option key={label.id} value={label.id}>
-              {label.name}
+          <option value="">All genres</option>
+          {genres.map((genre) => (
+            <option key={genre.id} value={genre.id}>
+              {genre.name}
             </option>
           ))}
         </select>
@@ -76,11 +76,11 @@ export default function BooksPanel({ books, labels, onCreate, onUpdate, onDelete
                 {book.bookGenres?.length ? (
                   book.bookGenres.map((bg) => (
                     <span key={bg.genreId} className="chip border-ember-100 bg-ember-50 text-ember-700">
-                      {bg.genre?.name ?? labels.find((l) => l.id === bg.genreId)?.name}
+                      {bg.genre?.name ?? genres.find((g) => g.id === bg.genreId)?.name}
                     </span>
                   ))
                 ) : (
-                  <span className="text-xs italic text-ink-400">No labels</span>
+                  <span className="text-xs italic text-ink-400">No genres</span>
                 )}
               </div>
 
@@ -108,7 +108,7 @@ export default function BooksPanel({ books, labels, onCreate, onUpdate, onDelete
       {editing && (
         <BookFormModal
           book={editing === "new" ? null : editing}
-          labels={labels}
+          genres={genres}
           onSave={handleSave}
           onClose={() => setEditing(null)}
         />
@@ -133,7 +133,7 @@ function EmptyState({ hasBooks, onAdd }) {
       <h3 className="mt-3 text-xl text-ink-900">{hasBooks ? "No books match" : "The shelves are quiet"}</h3>
       <p className="mt-1 max-w-sm text-sm text-ink-500">
         {hasBooks
-          ? "Try a different search or label filter."
+          ? "Try a different search or genre filter."
           : "Pour something warm and add the first book to the collection."}
       </p>
       {!hasBooks && (
