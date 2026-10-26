@@ -81,7 +81,7 @@ export default function BookDetails() {
 
                 <div className="my-6 h-px bg-frost-200" />
 
-                <h2 className="font-script text-4xl font-normal leading-tight text-berry-600">About this book</h2>
+                <h2 className="font-script text-4xl font-normal leading-tight text-berry-600">Review</h2>
                 <p className="mt-3 whitespace-pre-line text-base leading-relaxed text-ink-700 sm:text-lg">
                   {book.description || "No description yet."}
                 </p>
